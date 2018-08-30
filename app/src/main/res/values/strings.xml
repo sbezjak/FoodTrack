@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">FoodTrack</string>
+    <string name="food_name">name</string>
+    <string name="calories">kcal</string>
+    <string name="calories_left">Calories left</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="goal">Goal</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_dialog_title">Confirm delete</string>
+    <string name="delete_dialog_message">Are you sure you want to delete all entries?</string>
+</resources>
