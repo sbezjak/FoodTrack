@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MealViewModel viewModel;
     private MealViewAdapter adapter;
-    private MealViewAdapter.OnItemClickListener mListener;
     private EditText mealNameEditText;
     private EditText caloriesLeftEditText;
     private EditText mealCaloriesEditText;
@@ -82,8 +81,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        adapter = new MealViewAdapter(this, mListener);
+        adapter = new MealViewAdapter(this);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new MealViewAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(int position) {
+                openEditDialog();
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
+                // Get the meal at position
+                Meal meal = adapter.getMealAtPosition(position);
+
+                // Toast message to show deleted item
+                Toast.makeText(MainActivity.this,
+                        " Deleted " + meal.getName(),
+                        Toast.LENGTH_SHORT).show();
+
+                // Delete meal
+                viewModel.delete(meal);
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -134,41 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // Swipe items in the RecyclerView to delete
-        ItemTouchHelper helper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder,
-                                          RecyclerView.ViewHolder target) {
-                        return false;
-                    }
-
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-                        // Gets the position of the viewHolder that was swiped
-                        int position = viewHolder.getAdapterPosition();
-                        Meal meal = adapter.getMealAtPosition(position);
-
-                        // Toast message to show deleted item
-                        Toast.makeText(MainActivity.this,
-                                " Deleted " + meal.getName(),
-                                Toast.LENGTH_SHORT).show();
-
-                        // Delete meal
-                        viewModel.delete(meal);
-
-
-                    }
-                }
-        );
-
-        // Attach to RecyclerView
-        helper.attachToRecyclerView(recyclerView);
-
 
         //Clear Button
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -249,5 +233,11 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    //Method for edit meal
+    public void openEditDialog() {
+        EditDialog editDialog = new EditDialog();
+        editDialog.show(getSupportFragmentManager(), "edit dialog");
     }
 }

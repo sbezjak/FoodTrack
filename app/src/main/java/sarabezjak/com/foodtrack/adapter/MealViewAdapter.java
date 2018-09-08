@@ -3,10 +3,10 @@ package sarabezjak.com.foodtrack.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -24,20 +24,25 @@ public class MealViewAdapter extends RecyclerView.Adapter<MealViewAdapter.MealVi
 
     private OnItemClickListener mListener;
 
-    public MealViewAdapter(Context context, OnItemClickListener listener) {
-        this.mListener = mListener;
+    public MealViewAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = mLayoutInflater.inflate(R.layout.rv_item, parent, false);
-        return new MealViewHolder(itemView);
+        return new MealViewHolder(itemView, mListener);
+    }
+
+    public interface OnItemClickListener {
+        void onEditClick(int position);
+
+        void onDeleteClick(int position);
     }
 
     @Override
@@ -60,24 +65,49 @@ public class MealViewAdapter extends RecyclerView.Adapter<MealViewAdapter.MealVi
         else return 0;
     }
 
-    class MealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MealViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mealTextView;
         private TextView caloriesTextView;
+        private ImageView mDeleteIcon;
+        private ImageView mEditIcon;
 
-        private MealViewHolder(final View itemView) {
+        private MealViewHolder(final View itemView, final OnItemClickListener listener) {
             super(itemView);
             mealTextView = itemView.findViewById(R.id.tv_meal_name);
             caloriesTextView = itemView.findViewById(R.id.tv_calories);
-            itemView.setOnClickListener(this);
+            mDeleteIcon = itemView.findViewById(R.id.icon_delete);
+            mEditIcon = itemView.findViewById(R.id.icon_edit);
+
+
+            mEditIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEditClick(position);
+                        }
+                    }
+                }
+            });
+
+            mDeleteIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onDeleteClick(position);
+                        }
+                    }
+                }
+            });
 
         }
 
-        @Override
-        public void onClick(View v) {
-            Log.d(LOG_TAG, "Item clicked");
-
-        }
     }
 
     public Meal getMealAtPosition(int position) {
