@@ -13,10 +13,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new MealViewAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
-                openEditDialog();
+                openEditDialog(position);
             }
 
             @Override
@@ -235,9 +237,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Method for edit meal
-    public void openEditDialog() {
-        EditDialog editDialog = new EditDialog();
-        editDialog.show(getSupportFragmentManager(), "edit dialog");
+    //Method for editing meal
+    public void openEditDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.edit_alert_dialog, null);
+
+        final EditText dialogMealName = view.findViewById(R.id.et_dialog_name);
+        final EditText dialogMealCalories = view.findViewById(R.id.et_dialog_calories);
+
+        builder.setView(view)
+                .setTitle("Edit meal")
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int position) {
+
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    }
+                })
+                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int position) {
+
+
+
+                    }
+                });
+
+
+        AlertDialog alertDialog = builder.create();
+
+        Meal meal = adapter.getMealAtPosition(position);
+        String mealName = meal.getName();
+        int calories = meal.getMealCalories();
+
+        dialogMealName.setText(mealName);
+        dialogMealCalories.setText(Integer.toString(calories));
+
+        alertDialog.show();
+
+
+
     }
 }
