@@ -32,14 +32,9 @@ public class MealRepository {
     public LiveData<Integer> getGoal(){
         return mGoalCalories;
     }
-
     public LiveData<Integer> getCaloriesLeft(){
         return mCaloriesLeft;
     }
-
-   /* public void updateDatabaseDelete(int calories){
-        mMealDao.updateDatabaseDelete(calories);
-    }*/
 
     // Wrapper for the insert asynctask
     public void insert(Meal meal) {
@@ -48,7 +43,7 @@ public class MealRepository {
 
     // Wrapper for update asynctask
     public void update(Meal meal) {
-        new UpdateAsyncTask(mMealDao).execute();
+        new UpdateAsyncTask(mMealDao).execute(meal);
     }
 
     // Wrapper for delete asynctask
@@ -56,7 +51,6 @@ public class MealRepository {
         new DeleteMealAsyncTask(mMealDao).execute(meal);
 
     }
-
     // Wrapper for the deleteAll asynctask
     public void deleteAll() {
         new DeleteAllMealsAsyncTask(mMealDao).execute();
@@ -106,7 +100,7 @@ public class MealRepository {
         }
     }
 
-    //AsyncTask for delete
+    // AsyncTask for delete
     private static class DeleteMealAsyncTask extends AsyncTask<Meal, Void, Void> {
 
         private MealDao mAsyncTaskDao;

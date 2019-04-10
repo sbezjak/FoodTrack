@@ -15,8 +15,6 @@ public class MealViewModel extends AndroidViewModel {
     private  LiveData<Integer> mGoalCalories;
     private  LiveData<Integer> mCaloriesLeft;
     private MealRepository mRepository;
-    private int calories;
-
 
     public MealViewModel(Application application) {
         super(application);
@@ -54,7 +52,6 @@ public class MealViewModel extends AndroidViewModel {
     public void deleteAll() {
         mRepository.deleteAll();
     }
-
     // Wrapper method that calls the Repository's method to delete a single Meal
     public void delete(Meal meal) {
         mRepository.delete(meal);

@@ -3,23 +3,20 @@ package sarabezjak.com.foodtrack.ui;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -157,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Clear Button
+        // Clear Button
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         caloriesLeftEditText.setText(String.valueOf(caloriesLeft));
     }
 
-    //Method for clearing form
+    // Method for clearing form
     private void clearForm(ViewGroup group) {
         for (int i = 0, count = group.getChildCount(); i < count; ++i) {
             View view = group.getChildAt(i);
@@ -211,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Method for showing confirmation dialog when Clear button pressed
+    // Method for showing confirmation dialog when Clear button pressed
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.delete_dialog_title);
@@ -238,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Method for editing meal
+    // Method for editing meal
     public void openEditDialog(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -246,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText dialogMealName = view.findViewById(R.id.et_dialog_name);
         final EditText dialogMealCalories = view.findViewById(R.id.et_dialog_calories);
+        final Meal meal = adapter.getMealAtPosition(position);
 
         builder.setView(view)
                 .setTitle("Edit meal")
@@ -259,18 +257,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    private String mealName;
+                    private int mealCalories;
+                    private int caloriesLeft;
+                    private int oldMealCalories;
                     @Override
                     public void onClick(DialogInterface dialog, int position) {
-                        Meal meal = adapter.getMealAtPosition(position);
-                        viewModel.update(meal);
+                        mealName = dialogMealName.getText().toString();
+                        mealCalories = Integer.parseInt(dialogMealCalories.getText().toString());
+                        caloriesLeft = meal.getCaloriesLeft();
+                        oldMealCalories = meal.getMealCalories();
 
+                        meal.setName(mealName);
+                        meal.setMealCalories(mealCalories);
+                        meal.setCaloriesLeft(caloriesLeft + oldMealCalories - mealCalories);
+
+                        // Update meal
+                        viewModel.update(meal);
                     }
                 });
 
 
         AlertDialog alertDialog = builder.create();
 
-        Meal meal = adapter.getMealAtPosition(position);
         String mealName = meal.getName();
         int calories = meal.getMealCalories();
 
