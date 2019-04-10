@@ -41,22 +41,15 @@ public class MealViewModel extends AndroidViewModel {
     public LiveData<Integer> getCaloriesLeft() {
         return mCaloriesLeft;
     }
-/*
-    public void updateDatabaseDelete(int calories){
-        mRepository.updateDatabaseDelete(calories);
-    }*/
 
+    public void update(Meal meal){
+        mRepository.update(meal);
+    }
     // Wrapper insert() method that calls the Repository's insert() method. In this way,
     // the implementation of insert() is completely hidden from the UI.
     public void insert(Meal meal) {
         mRepository.insert(meal);
     }
-
-/*    // Wrapper method that calls the Repository's method for updating a meal
-    public void updateDatabaseDelete() {
-        mRepository.updateDatabaseDelete();
-    }*/
-
     // Wrapper method that calls the Repository's method for deleting all Meals
     public void deleteAll() {
         mRepository.deleteAll();

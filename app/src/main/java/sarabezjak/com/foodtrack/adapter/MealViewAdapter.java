@@ -3,6 +3,7 @@ package sarabezjak.com.foodtrack.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class MealViewAdapter extends RecyclerView.Adapter<MealViewAdapter.MealVi
 
     }
 
-    public void setMeals(List<Meal> meals){
+    public void setMeals(List<Meal> meals) {
         mMeals = meals;
         notifyDataSetChanged();
     }
@@ -64,6 +65,7 @@ public class MealViewAdapter extends RecyclerView.Adapter<MealViewAdapter.MealVi
             return mMeals.size();
         else return 0;
     }
+
 
     class MealViewHolder extends RecyclerView.ViewHolder {
 
@@ -111,7 +113,10 @@ public class MealViewAdapter extends RecyclerView.Adapter<MealViewAdapter.MealVi
     }
 
     public Meal getMealAtPosition(int position) {
+        Log.d("Position", String.valueOf(position));
         return mMeals.get(position);
+
+
     }
 
 }

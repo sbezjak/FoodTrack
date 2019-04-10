@@ -46,10 +46,10 @@ public class MealRepository {
         new InsertAsyncTask(mMealDao).execute(meal);
     }
 
- /*   // Wrapper for update asynctask
-    public void updateDatabaseDelete() {
+    // Wrapper for update asynctask
+    public void update(Meal meal) {
         new UpdateAsyncTask(mMealDao).execute();
-    }*/
+    }
 
     // Wrapper for delete asynctask
     public void delete(Meal meal) {
@@ -83,26 +83,28 @@ public class MealRepository {
             return null;
         }
     }
-/*
+
     // AsyncTask for update
-    private static class UpdateAsyncTask extends AsyncTask<Void, Void, Integer>{
+    private static class UpdateAsyncTask extends AsyncTask<Meal, Void, Void>{
 
         private MealDao mAsyncTaskDao;
 
-        UpdateAsyncTask(MealDao dao){
+        UpdateAsyncTask(MealDao dao) {
             mAsyncTaskDao = dao;
         }
 
-        @Override
-        protected void onPreExecute() {
-            mAsyncTaskDao.getCaloriesLeft();
+        private void updateDatabaseInsert(Meal meal){
+            int calories = meal.getCaloriesLeft();
+            mAsyncTaskDao.updateDatabaseInsert(calories);
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
-            return mAsyncTaskDao.updateDatabaseDelete(int calories);
+        protected Void doInBackground(final Meal... params) {
+            mAsyncTaskDao.update(params[0]);
+            updateDatabaseInsert(params[0]);
+            return null;
         }
-    }*/
+    }
 
     //AsyncTask for delete
     private static class DeleteMealAsyncTask extends AsyncTask<Meal, Void, Void> {
